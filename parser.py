@@ -13,7 +13,7 @@ pos = 0
 
 # order matters
 instruction_spec = [
-    Spec(x.lower(), x) for x in [
+    Spec(x.lower().split()[0], x) for x in [
         'Take', 'Put', 'Fold', 'Add', 'Remove', 'Combine', 'Divide', 'Stir', 'Mix', 'Clean', 'Pour', 'Set aside', 'Refrigerate', 'from', 'into', 'the', 'to', 'contents of the', 'until', 'refrigerator'
     ]
 ]
