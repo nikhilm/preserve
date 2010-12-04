@@ -7,15 +7,9 @@ from funcparserlib.lexer import make_tokenizer, Spec
 from funcparserlib.contrib.lexer import space, newline
 from funcparserlib.contrib.common import sometok, unarg
 
-pos = 0
+from common import *
 
-RecipeTitle = namedtuple('RecipeTitle', 'title')
-IngredientStart = namedtuple('IngredientStart', 'ignored')
-Ingredient = namedtuple('Ingredient', 'initial measure name')
-CookingTime = namedtuple('CookingTime', 'time unit')
-Oven = namedtuple('Oven', 'temperature')
-MethodStart = namedtuple('MethodStart', 'ignored')
-Serve = namedtuple('Serve', 'howmany')
+pos = 0
 
 # order matters
 instruction_spec = [
