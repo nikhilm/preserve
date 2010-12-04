@@ -13,9 +13,19 @@ _contrib_ package. So make sure you checkout from
 
 The two example programs from the website are included in examples.
 
-Run:
+Run
+---
 
     python preserve.py [program name]
 
 If program name is absent, Preserve will wait for you to type in the program on
 standard input.
+
+Debugging
+---------
+
+Preserve writes out certain debugging information. Set 
+
+    preserve.global_loglevel = logging.DEBUG
+
+for this. (on by default)
