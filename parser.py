@@ -41,6 +41,11 @@ tokens = [
     # TODO gas mark
     Spec('oven', r'Pre\-heat oven to'),
     Spec('oven_temp', 'degrees Celcius'),
+    # serve is treated separate here as it is
+    # not necessary for it to appear
+    # following 'Method.'
+    # But it is treated as just another
+    # instruction by the interpreter
     Spec('serve', r'^Serves', re.MULTILINE),
     Spec('number', '[0-9]+'),
     space,
