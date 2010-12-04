@@ -97,7 +97,7 @@ def interpret_recipe(title, ast):
 
 def interpret(node, ast):
     if type(node) is c.RecipeTitle:
-        return interpret_recipe(node.title, ast)
+        return interpret_recipe(node.title, ast[1:])
     else:
         raise SyntaxError("Expected Recipe Title")
 
