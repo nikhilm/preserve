@@ -153,5 +153,4 @@ def parse(input):
 
     main_parser = recipe
 
-    #pprint(tokenize(input))
     return main_parser.parse(tokenize(input))
