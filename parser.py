@@ -85,9 +85,8 @@ def parse_instruction(spec):
                   | put_i
                   | liquefy_i
                   | pour_i
-                  )
+                  ) >> (lambda x: Instruction(x[0].lower(), x[1:]))
 
-    pprint(instruction.parse(tokenize_instruction(spec)))
     return instruction.parse(tokenize_instruction(spec))
 
 def parse(input):
