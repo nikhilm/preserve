@@ -128,7 +128,7 @@ def parse(input):
     method_start = sometok('method_start') + p.skip(period)
 
     comment_part = p.maybe(period) + string
-    comment = string + comment_part + p.maybe(period)
+    comment = p.skip(string + comment_part + p.maybe(period))
     header = title + p.maybe(comment)
 
     instruction = (string
@@ -137,13 +137,14 @@ def parse(input):
 
     instructions = p.many(instruction)
 
-    program = (p.skip(method_start) >> (MethodStart)) + instructions
+    program = (method_start + instructions) >> unarg(MethodStart)
 
-    serves = sometok('serve') + ( p.oneplus(number) >> unarg(Serve) ) + period
+    serves = (sometok('serve') + number >> (lambda x: Serve('serve', x[1])) ) + p.skip(period)
+
+    ingredients_section = (ingredients_start + ingredients) >> unarg(IngredientSection)
 
     recipe = ( header
-             + ingredients_start
-             + ingredients
+             + p.maybe(ingredients_section)
              + p.maybe(cooking_time)
              + p.maybe(oven_temp)
              + p.maybe(program)
