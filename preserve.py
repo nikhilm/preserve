@@ -101,10 +101,11 @@ def interpret(node, ast):
     else:
         raise SyntaxError("Expected Recipe Title")
 
-d = []
-for line in fileinput.input():
-    d.append(line.strip())
+if __name__ == '__main__':
+    d = []
+    for line in fileinput.input():
+        d.append(line.strip())
 
-ast = parse('\n'.join(d))
+    ast = parse('\n'.join(d))
 
-interpret(ast[0], ast).cook()
+    interpret(ast[0], ast).cook()
