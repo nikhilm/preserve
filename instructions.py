@@ -16,6 +16,13 @@ def make_put(args, recipe):
         recipe.mixing_bowls[num(args[2])].append(copy.copy(recipe.ingredients[args[0]]))
     return put
 
+def make_take(args, recipe):
+    def take():
+        inp = int(sys.stdin.readline().strip())
+        ing = args[0]
+        recipe.ingredients[ing].value = inp
+    return take
+
 def make_liquefy(args, recipe):
     # two variants of liquefy
     if len(args) == 3:
