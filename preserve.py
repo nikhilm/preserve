@@ -54,6 +54,33 @@ class Recipe(object):
         self.log.addHandler(logging.StreamHandler())
         self.log.setLevel(global_loglevel)
 
+    def __str__(self):
+        rep = ["""
+Recipe %s.
+
+Current state:
+ Ingredients: """%self.title]
+
+        for i in self.ingredients:
+            rep.append('  ' + str(i))
+
+        rep.append('')
+        rep.append(' Mixing bowls.')
+        for (k, v) in self.mixing_bowls.items():
+            rep.append('  Bowl %d'%k)
+            for i in v:
+                rep.append('    %s'%i)
+
+        rep.append('')
+        rep.append(' Baking dishes.')
+        for (k, v) in self.baking_dishes.items():
+            rep.append('  Dish %d'%k)
+            for i in v:
+                rep.append('    %s'%v)
+
+        return '\n'.join(rep)
+
+
     def add_ingredient(self, ing):
         self.log.debug("Adding %s"%ing)
         self.ingredients[ing.name] = ing
