@@ -83,11 +83,16 @@ def parse_instruction(spec):
 
     pour_i = sometok('pour') + sometok('contents') + p.maybe(ordinal) + bowl + sometok('into') + the + p.maybe(ordinal) + dish
 
-    add_i = sometok('add') + (p.oneplus(string) >> concat) + p.maybe(to + p.maybe(ordinal|the) + bowl)
-
     fold_i = sometok('fold') + (p.oneplus(string) >> concat) + into + p.maybe(ordinal|the) + bowl
 
+    # cleanup repitition
+    add_i = sometok('add') + (p.oneplus(string) >> concat) + p.maybe(to + p.maybe(ordinal|the) + bowl)
+
     remove_i = sometok('remove') + (p.oneplus(string) >> concat) + p.maybe(sometok('from') + p.maybe(ordinal|the) + bowl)
+
+    combine_i = sometok('combine') + (p.oneplus(string) >> concat) + p.maybe(into + p.maybe(ordinal|the) + bowl)
+
+    divide_i = sometok('divide') + (p.oneplus(string) >> concat) + p.maybe(into + p.maybe(ordinal|the) + bowl)
 
     instruction = ( take_i
                   | put_i
@@ -96,6 +101,8 @@ def parse_instruction(spec):
                   | add_i
                   | fold_i
                   | remove_i
+                  | combine_i
+                  | divide_i
                   ) >> (lambda x: Instruction(x[0].lower(), x[1:]))
 
     return instruction.parse(tokenize_instruction(spec))
