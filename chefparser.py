@@ -71,7 +71,7 @@ def parse_instruction(spec):
 
     concat = lambda list: ' '.join(list)
 
-    take_i = sometok('take') + p.many(string) + sometok('from') + sometok('refrigerator')
+    take_i = sometok('take') + (p.oneplus(string) >> concat) + sometok('from') + sometok('refrigerator')
 
     put_i = sometok('put') + (p.oneplus(string) >> concat)  + sometok('into') + (ordinal|the) + bowl
 
