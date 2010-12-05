@@ -1,8 +1,14 @@
 import sys
+import copy
+import re
+
+import preserve
 
 def num(n):
     if n is None or n == 'the':
     	return 1
+
+    n = re.sub(r'st|nd|rd|th', '', n)
     return int(n)
 
 def make_put(args, recipe):
