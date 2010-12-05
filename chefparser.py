@@ -68,6 +68,8 @@ def parse_instruction(spec):
     bowl = sometok('bowl')
     the = sometok('the')
     dish = sometok('dish')
+    to = sometok('to')
+    into = sometok('into')
 
     concat = lambda list: ' '.join(list)
 
@@ -81,10 +83,19 @@ def parse_instruction(spec):
 
     pour_i = sometok('pour') + sometok('contents') + p.maybe(ordinal) + bowl + sometok('into') + the + p.maybe(ordinal) + dish
 
+    add_i = sometok('add') + (p.oneplus(string) >> concat) + p.maybe(to + p.maybe(ordinal|the) + bowl)
+
+    fold_i = sometok('fold') + (p.oneplus(string) >> concat) + into + p.maybe(ordinal|the) + bowl
+
+    remove_i = sometok('remove') + (p.oneplus(string) >> concat) + p.maybe(sometok('from') + p.maybe(ordinal|the) + bowl)
+
     instruction = ( take_i
                   | put_i
                   | liquefy_i
                   | pour_i
+                  | add_i
+                  | fold_i
+                  | remove_i
                   ) >> (lambda x: Instruction(x[0].lower(), x[1:]))
 
     return instruction.parse(tokenize_instruction(spec))
