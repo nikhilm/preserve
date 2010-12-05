@@ -1,6 +1,7 @@
 import sys
 import copy
 import re
+import operator
 
 import preserve
 
@@ -31,14 +32,6 @@ def make_liquefy(args, recipe):
             for i in recipe.mixing_bowls[n]:
                 i.state = 'liquid'
         return liquefy
-
-def make_add(args, recipe):
-    def add():
-        ing = recipe.ingredients[args[0]]
-        n = num(args[1][1])
-        top = recipe.mixing_bowls[n][-1]
-        top.value += ing.value
-    return add
 
 def make_pour(args, recipe):
     def pour():
@@ -73,17 +66,28 @@ def make_serve(args, recipe):
 
     return serve
 
-def make_remove(args, recipe):
-    def remove():
+def make_arith(args, recipe, op):
+    def arith():
         ing = recipe.ingredients[args[0]]
         n = 1
         if args[1] is not None:
             n = num(args[1][1])
 
         try:
-            recipe.mixing_bowls[n][-1].value -= ing.value
+            recipe.mixing_bowls[n][-1].value = op(recipe.mixing_bowls[n][-1].value, ing.value)
         except IndexError:
             raise IndexError("Bowl %s is empty!"%n)
 
-        sys.stderr.write(str(args))
-    return remove
+    return arith
+
+def make_add(args, recipe):
+    return make_arith(args, recipe, operator.add)
+
+def make_remove(args, recipe):
+    return make_arith(args, recipe, operator.sub)
+
+def make_combine(args, recipe):
+    return make_arith(args, recipe, operator.mul)
+
+def make_divide(args, recipe):
+    return make_arith(args, recipe, operator.div)
