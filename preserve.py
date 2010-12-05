@@ -5,7 +5,7 @@ import logging
 
 import common as c
 import instructions
-from parser import parse
+from chefparser import parse
 
 log = logging.getLogger('preserve')
 log.addHandler(logging.StreamHandler())
