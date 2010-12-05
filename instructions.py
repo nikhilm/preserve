@@ -13,7 +13,7 @@ def num(n):
 
 def make_put(args, recipe):
     def put():
-        recipe.mixing_bowls[num(args[2])].append(recipe.ingredients[args[0]])
+        recipe.mixing_bowls[num(args[2])].append(copy.copy(recipe.ingredients[args[0]]))
     return put
 
 def make_liquefy(args, recipe):
