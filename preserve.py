@@ -98,8 +98,10 @@ Current state:
             raise SyntaxError("No such command %s"%instr.command)
 
     def cook(self):
+        log.debug("Starting execution")
         for instr in self.instructions:
             instr()
+        return self
 
 def interpret_recipe(title, ast):
     recipes[title] = recipe = Recipe(title)
@@ -133,11 +135,14 @@ def interpret(node, ast):
     else:
         raise SyntaxError("Expected Recipe Title")
 
+def run(program):
+    """runs program string"""
+    ast = parse(program)
+    return interpret(ast[0], ast).cook()
+
 if __name__ == '__main__':
     d = []
     for line in fileinput.input():
         d.append(line.strip())
 
-    ast = parse('\n'.join(d))
-
-    interpret(ast[0], ast).cook()
+    run('\n'.join(d))
