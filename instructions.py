@@ -67,7 +67,7 @@ def make_serve(args, recipe):
             while len(dish) > 0:
             	ing = dish.pop()
                 if ing.state == 'dry':
-                	sys.stdout.write(ing.value)
+                    sys.stdout.write(str(ing.value))
                 else:
                 	sys.stdout.write(chr(ing.value))
 
