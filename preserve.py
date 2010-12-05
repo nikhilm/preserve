@@ -38,11 +38,16 @@ class Ingredient(object):
     def __str__(self):
         return "ingredient %s: %s %s %s"%(self.name, self.value, self.unit, self.state)
 
+class IngredientDict(defaultdict):
+    def __missing__(self, key):
+        self[key] = value = Ingredient(key)
+        return value
+
 class Recipe(object):
     def __init__(self, title):
         self.mixing_bowls = defaultdict(list)
         self.baking_dishes = defaultdict(list)
-        self.ingredients = {}
+        self.ingredients = IngredientDict()
         self.instructions = []
         self.title = title
         self.log = logging.getLogger(self.title)
