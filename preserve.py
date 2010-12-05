@@ -17,7 +17,7 @@ log.setLevel(global_loglevel)
 recipes = {}
 
 class Ingredient(object):
-    def __init__(self, name, unit, initial):
+    def __init__(self, name, unit=None, initial=0):
         self.name = name
         self.value = int(initial)
 
