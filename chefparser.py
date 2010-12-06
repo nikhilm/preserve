@@ -101,6 +101,10 @@ def parse_instruction(spec):
 
     add_dry_i = sometok('add_dry') + p.maybe(to + p.maybe(ordinal|the) + bowl)
 
+    stir_1 = sometok('stir') + p.maybe(the + p.maybe(ordinal|the) + bowl) + sometok('for') + sometok('number') + sometok('minutes')
+    stir_2 = sometok('stir') + (p.oneplus(string) >> concat) + into + the + p.maybe(ordinal) + bowl
+    stir_i = stir_1 | stir_2
+
     instruction = ( take_i
                   | put_i
                   | liquefy_i
@@ -111,6 +115,7 @@ def parse_instruction(spec):
                   | combine_i
                   | divide_i
                   | add_dry_i
+                  | stir_i
                   ) >> (lambda x: Instruction(x[0].lower().replace(' ', '_'), x[1:]))
 
     return instruction.parse(tokenize_instruction(spec))
