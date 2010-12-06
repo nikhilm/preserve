@@ -3,6 +3,7 @@ import copy
 import re
 import operator
 import logging
+import random
 
 import preserve
 
@@ -143,3 +144,13 @@ def make_stir(args, recipe):
             raise IndexError("Stir attempted on empty bowl! %s"%str(args))
 
     return stir
+
+def make_mix(args, recipe):
+    def mix():
+        n = 1
+        if args[0] is not None:
+            n = num(args[0][1])
+
+        random.shuffle(recipe.mixing_bowls[n])
+
+    return mix

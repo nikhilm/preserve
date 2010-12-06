@@ -18,7 +18,7 @@ pos = 0
 # order matters
 instruction_spec = [
     Spec(x.lower().split()[0], x) for x in [
-        'Take', 'Put', 'Fold', 'Add', 'Remove', 'Combine', 'Divide', 'Stir', 'Mix', 'Clean', 'Pour', 'Set aside', 'Refrigerate', 'from', 'into', 'the', 'to', 'for', 'contents of the', 'until', 'refrigerator', 'minutes', 'hours'
+        'Take', 'Put', 'Fold', 'Add', 'Remove', 'Combine', 'Divide', 'Stir', 'Mix', 'Clean', 'Pour', 'Set aside', 'Refrigerate', 'from', 'into', 'the', 'to', 'for', 'contents of the', 'until', 'refrigerator', 'minutes', 'hours', 'well'
     ]
 ]
 
@@ -105,6 +105,8 @@ def parse_instruction(spec):
     stir_2 = sometok('stir') + (p.oneplus(string) >> concat) + into + the + p.maybe(ordinal) + bowl
     stir_i = stir_1 | stir_2
 
+    mix_i = sometok('mix') + p.maybe(the + p.maybe(ordinal) + bowl) + sometok('well')
+
     instruction = ( take_i
                   | put_i
                   | liquefy_i
@@ -116,6 +118,7 @@ def parse_instruction(spec):
                   | divide_i
                   | add_dry_i
                   | stir_i
+                  | mix_i
                   ) >> (lambda x: Instruction(x[0].lower().replace(' ', '_'), x[1:]))
 
     return instruction.parse(tokenize_instruction(spec))
