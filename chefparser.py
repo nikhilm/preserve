@@ -107,6 +107,8 @@ def parse_instruction(spec):
 
     mix_i = sometok('mix') + p.maybe(the + p.maybe(ordinal) + bowl) + sometok('well')
 
+    clean_i = sometok('clean') + p.maybe(ordinal|the) + bowl
+
     instruction = ( take_i
                   | put_i
                   | liquefy_i
@@ -119,6 +121,7 @@ def parse_instruction(spec):
                   | add_dry_i
                   | stir_i
                   | mix_i
+                  | clean_i
                   ) >> (lambda x: Instruction(x[0].lower().replace(' ', '_'), x[1:]))
 
     return instruction.parse(tokenize_instruction(spec))

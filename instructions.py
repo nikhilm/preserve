@@ -154,3 +154,10 @@ def make_mix(args, recipe):
         random.shuffle(recipe.mixing_bowls[n])
 
     return mix
+
+def make_clean(args, recipe):
+    def clean():
+        n = num(args[0])
+        recipe.mixing_bowls[n] = []
+
+    return clean
