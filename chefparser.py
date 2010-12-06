@@ -18,7 +18,7 @@ instruction_spec = [
     ]
 ]
 
-instruction_spec.insert(0, Spec('add_dry', 'Add dry'))
+instruction_spec.insert(0, Spec('add_dry', 'Add dry ingredients'))
 instruction_spec.insert(0, Spec('liquefy', 'Liquefy|Liquify'))
 instruction_spec.append(Spec('serve_with', r'Serve with'))
 
@@ -94,6 +94,8 @@ def parse_instruction(spec):
 
     divide_i = sometok('divide') + (p.oneplus(string) >> concat) + p.maybe(into + p.maybe(ordinal|the) + bowl)
 
+    add_dry_i = sometok('add_dry') + p.maybe(to + p.maybe(ordinal|the) + bowl)
+
     instruction = ( take_i
                   | put_i
                   | liquefy_i
@@ -103,7 +105,8 @@ def parse_instruction(spec):
                   | remove_i
                   | combine_i
                   | divide_i
-                  ) >> (lambda x: Instruction(x[0].lower(), x[1:]))
+                  | add_dry_i
+                  ) >> (lambda x: Instruction(x[0].lower().replace(' ', '_'), x[1:]))
 
     return instruction.parse(tokenize_instruction(spec))
 
