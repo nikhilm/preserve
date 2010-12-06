@@ -18,7 +18,7 @@ pos = 0
 # order matters
 instruction_spec = [
     Spec(x.lower().split()[0], x) for x in [
-        'Take', 'Put', 'Fold', 'Add', 'Remove', 'Combine', 'Divide', 'Stir', 'Mix', 'Clean', 'Pour', 'Set aside', 'Refrigerate', 'from', 'into', 'the', 'to', 'contents of the', 'until', 'refrigerator'
+        'Take', 'Put', 'Fold', 'Add', 'Remove', 'Combine', 'Divide', 'Stir', 'Mix', 'Clean', 'Pour', 'Set aside', 'Refrigerate', 'from', 'into', 'the', 'to', 'for', 'contents of the', 'until', 'refrigerator', 'minutes', 'hours'
     ]
 ]
 
@@ -31,6 +31,7 @@ instruction_spec.append(Spec('dish', 'baking dish'))
 instruction_spec.append(space)
 instruction_spec.append(Spec('string', '[a-z]+'))
 instruction_spec.append(Spec('ordinal', '[0-9]+(st|nd|rd|th)'))
+instruction_spec.append(Spec('number', '[0-9]+'))
 
 tokens = [
     Spec('ingredients_start', 'Ingredients'),
