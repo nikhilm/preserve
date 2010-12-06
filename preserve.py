@@ -61,7 +61,7 @@ Recipe %s.
 Current state:
  Ingredients: """%self.title]
 
-        for i in self.ingredients:
+        for i in self.ingredients.values():
             rep.append('  ' + str(i))
 
         rep.append('')
