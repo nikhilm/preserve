@@ -80,7 +80,7 @@ def parse_instruction(spec):
 
     take_i = sometok('take') + (p.oneplus(string) >> concat) + sometok('from') + sometok('refrigerator')
 
-    put_i = sometok('put') + (p.oneplus(string) >> concat)  + sometok('into') + (ordinal|the) + bowl
+    put_i = sometok('put') + (p.oneplus(string) >> concat)  + sometok('into') + p.maybe(ordinal|the) + bowl
 
     liquefy_1 = sometok('liquefy') + sometok('contents') + p.maybe(ordinal) + bowl
     liquefy_2 = sometok('liquefy') + (p.oneplus(string) >> concat)
