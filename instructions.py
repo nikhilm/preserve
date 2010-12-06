@@ -95,3 +95,21 @@ def make_combine(args, recipe):
 
 def make_divide(args, recipe):
     return make_arith(args, recipe, operator.div)
+
+def make_add_dry_ingredients(args, recipe):
+    def add_dry_ingredients():
+        actual_args = args[0]
+
+        n = 1
+        if actual_args is not None:
+            n = num(actual_args[1])
+
+        values = [ing.value for ing in recipe.ingredients.values() if ing.state == 'dry']
+
+        # TODO Place as in add on top or replace?
+        try:
+            recipe.mixing_bowls[n][-1].value = sum(values)
+        except IndexError:
+            raise IndexError("Bowl %s is empty!"%n)
+
+    return add_dry_ingredients
