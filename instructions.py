@@ -2,8 +2,12 @@ import sys
 import copy
 import re
 import operator
+import logging
 
 import preserve
+
+log = logging.getLogger('preserve.instructions')
+log.addHandler(logging.StreamHandler())
 
 def num(n):
     if n is None or n == 'the':
