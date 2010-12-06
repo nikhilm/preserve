@@ -1,6 +1,7 @@
 from pprint import pprint
 from collections import namedtuple
 import re
+import logging
 
 import funcparserlib.parser as p
 from funcparserlib.lexer import make_tokenizer, Spec
@@ -8,6 +9,9 @@ from funcparserlib.contrib.lexer import space, newline
 from funcparserlib.contrib.common import sometok, unarg
 
 from common import *
+
+log = logging.getLogger('preserve.chefparser')
+log.addHandler(logging.StreamHandler())
 
 pos = 0
 
