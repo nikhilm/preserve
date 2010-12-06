@@ -30,12 +30,15 @@ def make_take(args, recipe):
 
 def make_liquefy(args, recipe):
     # two variants of liquefy
-    if len(args) == 3:
-        def liquefy():
+    def liquefy():
+        if len(args) == 3:
             n = num(args[1])
             for i in recipe.mixing_bowls[n]:
                 i.state = 'liquid'
-        return liquefy
+        else:
+            recipe.ingredients[args[0]].state = 'liquid'
+
+    return liquefy
 
 def make_pour(args, recipe):
     def pour():
