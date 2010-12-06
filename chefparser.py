@@ -78,7 +78,7 @@ def parse_instruction(spec):
     put_i = sometok('put') + (p.oneplus(string) >> concat)  + sometok('into') + (ordinal|the) + bowl
 
     liquefy_1 = sometok('liquefy') + sometok('contents') + p.maybe(ordinal) + bowl
-    liquefy_2 = sometok('liquefy') + p.many(string)
+    liquefy_2 = sometok('liquefy') + (p.oneplus(string) >> concat)
     liquefy_i = liquefy_1 | liquefy_2
 
     pour_i = sometok('pour') + sometok('contents') + p.maybe(ordinal) + bowl + sometok('into') + the + p.maybe(ordinal) + dish
