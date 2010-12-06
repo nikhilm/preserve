@@ -113,3 +113,30 @@ def make_add_dry_ingredients(args, recipe):
             raise IndexError("Bowl %s is empty!"%n)
 
     return add_dry_ingredients
+
+def make_stir(args, recipe):
+    def stir():
+        howmany = 0
+        bowl = None
+        if type(args[0]) is str:
+            howmany = recipe.ingredients[args[0]].value
+            bowl = recipe.mixing_bowls[num(args[3])]
+
+        else:
+            howmany = int(args[2])
+            n = 1
+            if args[0] is not None:
+                n = num(args[0][1])
+
+            bowl = recipe.mixing_bowls[n]
+
+        try:
+            if len(bowl) <= howmany:
+                bowl.insert(0, bowl.pop())
+            else:
+                pos = len(bowl) - howmany - 1
+                bowl.insert(pos, bowl.pop())
+        except IndexError:
+            raise IndexError("Stir attempted on empty bowl! %s"%str(args))
+
+    return stir
