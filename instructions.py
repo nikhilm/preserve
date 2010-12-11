@@ -233,3 +233,24 @@ def make_set_aside(args, recipe):
 
     return set_aside
 
+def make_serve_with(args, recipe):
+    def serve_with(env):
+        log.debug("Recipes are %s", env.recipes)
+        subrecipe = env.recipes[args[0]]
+        log.debug("Invoking %s", subrecipe)
+
+        subrecipe.mixing_bowls = copy.deepcopy(recipe.mixing_bowls)
+        subrecipe.baking_dishes = copy.deepcopy(recipe.baking_dishes)
+        subrecipe.cook(env)
+
+        recipe.mixing_bowls[1].extend(subrecipe.mixing_bowls[1])
+
+    return serve_with
+
+def make_refrigerate(args, recipe):
+    def refrigerate(env):
+        log.debug("REFRIG %s", args)
+        log.debug("Setting ip to %d", len(recipe.instructions))
+        recipe.ip = len(recipe.instructions)
+
+    return refrigerate

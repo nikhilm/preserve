@@ -114,6 +114,10 @@ def parse_instruction(spec):
 
     set_aside_i = sometok('set') >> (lambda x: (x, None))
 
+    serve_with_i = sometok('serve_with') + (p.oneplus(string) >> concat)
+
+    refrigerate_i = sometok('refrigerate') + p.maybe(sometok('for') + sometok('number') + sometok('hours'))
+
     instruction = ( take_i
                   | put_i
                   | liquefy_i
@@ -130,6 +134,8 @@ def parse_instruction(spec):
                   | loop_end_i      # -| ORDER matters
                   | loop_start_i    # -|
                   | set_aside_i
+                  | serve_with_i
+                  | refrigerate_i
                   ) >> (lambda x: Instruction(x[0].lower().replace(' ', '_'), x[1:]))
 
     return instruction.parse(tokenize_instruction(spec))
