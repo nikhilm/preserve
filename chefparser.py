@@ -109,8 +109,8 @@ def parse_instruction(spec):
 
     clean_i = sometok('clean') + p.maybe(ordinal|the) + bowl
 
-    loop_start_i = (sometok('string') + the + (p.oneplus(string) >> concat)) >> (lambda x: ('loop_start', x))
-    loop_end_i = (sometok('string') + p.maybe(the + (p.oneplus(string) >> concat)) + sometok('until') + string) >> (lambda x: ('loop_end', x))
+    loop_start_i = (sometok('string') + p.maybe(the) + (p.oneplus(string) >> concat)) >> (lambda x: ('loop_start', x))
+    loop_end_i = (sometok('string') + p.maybe(p.maybe(the) + (p.oneplus(string) >> concat)) + sometok('until') + string) >> (lambda x: ('loop_end', x))
 
     set_aside_i = sometok('set') >> (lambda x: (x, None))
 

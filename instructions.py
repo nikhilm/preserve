@@ -168,6 +168,11 @@ class make_loop_start(object):
         recipe.loop_depth += 1
         self.recipe = recipe
         self.verb = args[0].lower()
+        # if it ends in e, the end loop equivalent
+		# will have just a d
+        if self.verb[-1] == 'e':
+            self.verb = self.verb[:-1]
+
         self.ingredient_name = args[2]
         self.depth = recipe.loop_depth
         self.jump = None
@@ -182,7 +187,6 @@ class make_loop_start(object):
 class make_loop_end(object):
     def __init__(self, args, recipe):
         args = args[0] #unpack
-        log.debug(args)
         self.recipe = recipe
         self.verb = args[3].lower()[:-2]
         self.depth = recipe.loop_depth
