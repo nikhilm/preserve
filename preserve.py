@@ -14,8 +14,6 @@ global_loglevel = logging.DEBUG
 
 log.setLevel(global_loglevel)
 
-recipes = {}
-
 class Ingredient(object):
     def __init__(self, name, unit=None, initial=None):
         self.name = name
@@ -102,16 +100,17 @@ Current state:
             self.log.debug("Recipe attribute error %s"%e)
             raise SyntaxError("No such command %s"%instr.command)
 
-    def cook(self):
+    def cook(self, env):
         log.debug("Starting execution")
         while self.ip >= 0 and self.ip < len(self.instructions):
             prev = self.ip
             self.ip += 1
-            self.instructions[prev]()
+            self.instructions[prev](env)
+        log.debug("Done with %s", self.title)
         return self
 
-def interpret_recipe(title, ast):
-    recipes[title] = recipe = Recipe(title)
+def interpret_recipe(title, ast, env):
+    env.recipes[title.lower()] = recipe = Recipe(title)
     log.debug("Interpreting recipe %s"%title)
 
     for node in ast:
@@ -136,16 +135,27 @@ def interpret_recipe(title, ast):
 
     return recipe
 
-def interpret(node, ast):
-    if type(node) is c.RecipeTitle:
-        return interpret_recipe(node.title, ast[1:])
-    else:
-        raise SyntaxError("Expected Recipe Title")
+def interpret(ast, env):
+    # main recipe is the first one
+    # TODO error if no recipe
+    main = None
+
+    for other in ast:
+        log.debug(other.parts)
+        recipe = interpret_recipe(other.parts[0].title, other.parts[1:], env)
+        if main is None:
+            main = recipe
+    return main
+
+class Environment(object):
+    def __init__(self):
+        self.recipes = {}
 
 def run(program):
     """runs program string"""
+    env = Environment()
     ast = parse(program)
-    return interpret(ast[0], ast).cook()
+    return interpret(ast, env).cook(env)
 
 if __name__ == '__main__':
     d = []

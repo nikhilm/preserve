@@ -3,7 +3,7 @@ sys.path.append('/home/nikhil/workspace/preserve')
 
 from nose.tools import assert_raises
 
-from preserve import run, interpret, parse
+from preserve import run, interpret, parse, Environment
 
 recipe_simple_loop = """
 Fruity Loops 1.
@@ -77,9 +77,10 @@ Shake the flour until sifted.
 """
 
 verb_match_ast = parse(recipe_verb_match)
-verb_match_i = interpret(verb_match_ast[0], verb_match_ast)
+sys.stderr.write('HECKLE\n'+str(verb_match_ast)+'\n')
+verb_match_i = interpret(verb_match_ast, Environment())
 
-verb_match = verb_match_i.cook()
+verb_match = verb_match_i.cook(Environment())
 assert len(verb_match.ingredients) == 3
 
 recipe_verb_match_fail = """

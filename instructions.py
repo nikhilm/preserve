@@ -18,12 +18,12 @@ def num(n):
     return int(n)
 
 def make_put(args, recipe):
-    def put():
+    def put(env):
         recipe.mixing_bowls[num(args[2])].append(copy.copy(recipe.ingredients[args[0]]))
     return put
 
 def make_take(args, recipe):
-    def take():
+    def take(env):
         inp = int(sys.stdin.readline().strip())
         ing = args[0]
         recipe.ingredients[ing].value = inp
@@ -31,7 +31,7 @@ def make_take(args, recipe):
 
 def make_liquefy(args, recipe):
     # two variants of liquefy
-    def liquefy():
+    def liquefy(env):
         if len(args) == 3:
             n = num(args[1])
             for i in recipe.mixing_bowls[n]:
@@ -42,7 +42,7 @@ def make_liquefy(args, recipe):
     return liquefy
 
 def make_pour(args, recipe):
-    def pour():
+    def pour(env):
         n = num(args[1])
         p = num(args[5])
 
@@ -52,7 +52,7 @@ def make_pour(args, recipe):
     return pour
 
 def make_fold(args, recipe):
-    def fold():
+    def fold(env):
         n = num(args[2])
         ing = recipe.ingredients[args[0]]
         top = recipe.mixing_bowls[n].pop()
@@ -61,7 +61,7 @@ def make_fold(args, recipe):
     return fold
 
 def make_serve(args, recipe):
-    def serve():
+    def serve(env):
         n = num(args)
         for i in range(1, n+1):
             dish = recipe.baking_dishes[i]
@@ -75,7 +75,7 @@ def make_serve(args, recipe):
     return serve
 
 def make_arith(args, recipe, op):
-    def arith():
+    def arith(env):
         ing = recipe.ingredients[args[0]]
         n = 1
         if args[1] is not None:
@@ -101,7 +101,7 @@ def make_divide(args, recipe):
     return make_arith(args, recipe, operator.div)
 
 def make_add_dry_ingredients(args, recipe):
-    def add_dry_ingredients():
+    def add_dry_ingredients(env):
         actual_args = args[0]
 
         n = 1
@@ -119,7 +119,7 @@ def make_add_dry_ingredients(args, recipe):
     return add_dry_ingredients
 
 def make_stir(args, recipe):
-    def stir():
+    def stir(env):
         howmany = 0
         bowl = None
         if type(args[0]) is str:
@@ -146,7 +146,7 @@ def make_stir(args, recipe):
     return stir
 
 def make_mix(args, recipe):
-    def mix():
+    def mix(env):
         n = 1
         if args[0] is not None:
             n = num(args[0][1])
@@ -156,7 +156,7 @@ def make_mix(args, recipe):
     return mix
 
 def make_clean(args, recipe):
-    def clean():
+    def clean(env):
         n = num(args[0])
         recipe.mixing_bowls[n] = []
 
@@ -177,7 +177,7 @@ class make_loop_start(object):
         self.depth = recipe.loop_depth
         self.jump = None
 
-    def __call__(self):
+    def __call__(self, env):
         if self.jump == None:
             raise SyntaxError("%s:%s: No matching loop end for %s %s"%(self.recipe.title, self.recipe.instructions.index(self), self.verb, self.ingredient_name))
         val = self.recipe.ingredients[self.ingredient_name].value
@@ -215,13 +215,13 @@ class make_loop_end(object):
                 self.search_depth += 1
         assert self.search_depth == 0
 
-    def __call__(self):
+    def __call__(self, env):
         if self.ingredient_name is not None:
             self.recipe.ingredients[self.ingredient_name].value -= 1
         self.recipe.ip = self.jump
 
 def make_set_aside(args, recipe):
-    def set_aside():
+    def set_aside(env):
         for i in range(recipe.ip, len(recipe.instructions)):
             instr = recipe.instructions[i]
             if type(instr) is make_loop_end:

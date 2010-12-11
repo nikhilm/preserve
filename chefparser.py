@@ -193,8 +193,7 @@ def parse(input):
              + p.maybe(oven_temp)
              + p.maybe(program)
              + p.maybe(serves)
-             )
+             ) >> RecipeNode
 
-    main_parser = recipe
-
+    main_parser = p.oneplus(recipe)
     return main_parser.parse(tokenize(input))

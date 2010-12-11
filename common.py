@@ -9,4 +9,4 @@ Oven = namedtuple('Oven', 'temperature')
 MethodStart = namedtuple('MethodStart', 'start list')
 Serve = namedtuple('Serve', 'command rest')
 Instruction = namedtuple('Instruction', 'command rest')
-
+RecipeNode = namedtuple('RecipeNode', 'parts')
