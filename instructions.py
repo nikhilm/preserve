@@ -195,7 +195,7 @@ class loop_stop(object):
                 # depth > ours is ok
                 if i.depth == self.depth:
                     if i.verb != self.verb:
-                        raise SyntaxError("Unexpected loop verb %s. Expected %s"%(i.verb, self.verb))
+                        raise NameError("Unexpected loop verb %s. Expected %s"%(i.verb, self.verb))
                     else:
                         self.jump = recipe.instructions.index(i)
                         i.jump = len(recipe.instructions) + 1
