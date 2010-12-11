@@ -114,3 +114,19 @@ Shake the flour until sifted.
 
 assert_raises(SyntaxError, run, recipe_err_nesting)
 
+
+recipe_set_aside = """
+Fruity Loops Set Aside.
+
+Ingredients.
+2 g atoms
+
+Method.
+Bombard the atoms.
+    Set aside.
+Keepbombarding the atoms until bombarded.
+"""
+
+set_aside = run(recipe_set_aside)
+
+assert set_aside.ingredients['atoms'].value == 2

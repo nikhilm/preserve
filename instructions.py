@@ -210,3 +210,17 @@ class loop_stop(object):
         if self.ingredient_name is not None:
             self.recipe.ingredients[self.ingredient_name].value -= 1
         self.recipe.ip = self.jump
+
+def make_set_aside(args, recipe):
+    def set_aside():
+        for i in range(recipe.ip, len(recipe.instructions)):
+            instr = recipe.instructions[i]
+            if type(instr) is loop_stop:
+                recipe.ip = i+1
+                return
+        # if we reach here, we weren't
+        # in a loop
+        raise SyntaxError("'Set aside.' not in loop body!")
+
+    return set_aside
+

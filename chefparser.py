@@ -112,6 +112,8 @@ def parse_instruction(spec):
     loop_start_i = sometok('string') + the + (p.oneplus(string) >> concat)
     loop_end_i = sometok('string') + p.maybe(the + (p.oneplus(string) >> concat)) + sometok('until') + string
 
+    set_aside_i = sometok('set') >> (lambda x: (x, None))
+
     instruction = ( take_i
                   | put_i
                   | liquefy_i
@@ -127,6 +129,7 @@ def parse_instruction(spec):
                   | clean_i
                   | loop_end_i      # -| ORDER matters
                   | loop_start_i    # -|
+                  | set_aside_i
                   ) >> (lambda x: Instruction(x[0].lower().replace(' ', '_'), x[1:]))
 
     return instruction.parse(tokenize_instruction(spec))
