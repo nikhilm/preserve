@@ -29,7 +29,7 @@ instruction_spec.append(Spec('serve_with', r'Serve with'))
 instruction_spec.append(Spec('bowl', 'mixing bowl'))
 instruction_spec.append(Spec('dish', 'baking dish'))
 instruction_spec.append(space)
-instruction_spec.append(Spec('string', '[a-z]+'))
+instruction_spec.append(Spec('string', '[A-Za-z]+'))
 instruction_spec.append(Spec('ordinal', '[0-9]+(st|nd|rd|th)'))
 instruction_spec.append(Spec('number', '[0-9]+'))
 
@@ -109,6 +109,9 @@ def parse_instruction(spec):
 
     clean_i = sometok('clean') + p.maybe(ordinal|the) + bowl
 
+    loop_start_i = sometok('string') + the + (p.oneplus(string) >> concat)
+    loop_end_i = sometok('string') + p.maybe(the + (p.oneplus(string) >> concat)) + sometok('until') + string
+
     instruction = ( take_i
                   | put_i
                   | liquefy_i
@@ -122,6 +125,8 @@ def parse_instruction(spec):
                   | stir_i
                   | mix_i
                   | clean_i
+                  | loop_end_i      # -| ORDER matters
+                  | loop_start_i    # -|
                   ) >> (lambda x: Instruction(x[0].lower().replace(' ', '_'), x[1:]))
 
     return instruction.parse(tokenize_instruction(spec))
