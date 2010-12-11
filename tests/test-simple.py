@@ -60,7 +60,6 @@ out = sys.stdout.read()
 sys.stdin = stdin
 sys.stdout = stdout
 
-print >> sys.stderr, result
 assert result
 assert len(result.ingredients) == 3
 assert result.ingredients['apricot jam'].value == 3
