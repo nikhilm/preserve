@@ -172,8 +172,7 @@ def parse(input):
 
     method_start = sometok('method_start') + p.skip(period)
 
-    comment_part = p.maybe(period) + string
-    comment = p.skip(string + comment_part + p.maybe(period))
+    comment = p.skip(p.many(string|period))
     header = title + p.maybe(comment)
 
     instruction = (string
