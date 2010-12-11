@@ -48,11 +48,16 @@ class Recipe(object):
         self.mixing_bowls = defaultdict(list)
         self.baking_dishes = defaultdict(list)
         self.ingredients = IngredientDict()
+        self.ip = 0
         self.instructions = []
         self.title = title
         self.log = logging.getLogger(self.title)
         self.log.addHandler(logging.StreamHandler())
         self.log.setLevel(global_loglevel)
+
+        # used only during instruction
+        # generation phase
+        self.loop_depth = 0
 
     def __str__(self):
         rep = ["""
@@ -86,12 +91,25 @@ Current state:
         self.ingredients[ing.name] = ing
 
     def cook_instruction(self, instr):
-        make = getattr(instructions, 'make_%s'%instr.command)
+        make = getattr(instructions, 'make_%s'%instr.command, None)
+        if make is None:
+            return None
         return make(instr.rest, self)
 
     def add_instruction(self, instr):
         try:
             ci = self.cook_instruction(instr)
+            if ci is not None:
+                pass
+            elif instr.rest[0] == 'the':
+                self.loop_depth += 1
+                ci = instructions.loop_start(instr, self.loop_depth, self)
+            elif instr.rest[1] == 'until':
+                ci = instructions.loop_stop(instr, self.loop_depth, self)
+                self.loop_depth -= 1
+            else:
+                raise AttributeError()
+
             self.instructions.append(ci)
         except AttributeError, e:
             self.log.debug("Recipe attribute error %s"%e)
@@ -99,8 +117,10 @@ Current state:
 
     def cook(self):
         log.debug("Starting execution")
-        for instr in self.instructions:
-            instr()
+        while self.ip >= 0 and self.ip < len(self.instructions):
+            prev = self.ip
+            self.ip += 1
+            self.instructions[prev]()
         return self
 
 def interpret_recipe(title, ast):
