@@ -161,3 +161,52 @@ def make_clean(args, recipe):
         recipe.mixing_bowls[n] = []
 
     return clean
+
+class loop_start(object):
+    def __init__(self, instr, depth, recipe):
+        self.recipe = recipe
+        self.verb = instr.command.lower()
+        self.ingredient_name = instr.rest[1]
+        self.depth = depth
+        self.jump = None
+
+    def __call__(self):
+        if self.jump == None:
+            raise SyntaxError("%s:%s: No matching loop end for %s %s"%(self.recipe.title, self.recipe.instructions.index(self), self.verb, self.ingredient_name))
+        val = self.recipe.ingredients[self.ingredient_name].value
+        if val == 0:
+            self.recipe.ip = self.jump
+
+class loop_stop(object):
+    def __init__(self, instr, depth, recipe):
+        self.recipe = recipe
+        self.verb = instr.rest[2].lower()[:-2]
+        self.depth = depth
+        self.jump = None
+
+        self.ingredient_name = None
+        if instr.rest[0] is not None:
+            self.ingredient_name = instr.rest[0][1]
+
+        self.search_depth = 0
+        # search for start expression
+        for i in reversed(recipe.instructions):
+            if type(i) == loop_start:
+                # depth > ours is ok
+                if i.depth == self.depth:
+                    if i.verb != self.verb:
+                        raise SyntaxError("Unexpected loop verb %s. Expected %s"%(i.verb, self.verb))
+                    else:
+                        self.jump = recipe.instructions.index(i)
+                        i.jump = len(recipe.instructions) + 1
+                        break
+                else:
+                    self.search_depth -= 1
+            elif type(i) == loop_stop:
+                self.search_depth += 1
+        assert self.search_depth == 0
+
+    def __call__(self):
+        if self.ingredient_name is not None:
+            self.recipe.ingredients[self.ingredient_name].value -= 1
+        self.recipe.ip = self.jump
