@@ -88,7 +88,7 @@ def parse_instruction(spec):
 
     pour_i = sometok('pour') + sometok('contents') + p.maybe(ordinal) + bowl + sometok('into') + the + p.maybe(ordinal) + dish
 
-    fold_i = sometok('fold') + (p.oneplus(string) >> concat) + into + p.maybe(ordinal|the) + bowl
+    fold_i = sometok('fold') + p.skip(p.maybe(the)) + (p.oneplus(string) >> concat) + into + p.maybe(ordinal|the) + bowl
 
     # cleanup repitition
     add_i = sometok('add') + (p.oneplus(string) >> concat) + p.maybe(to + p.maybe(ordinal|the) + bowl)
