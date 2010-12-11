@@ -177,7 +177,7 @@ class loop_start(object):
         if val == 0:
             self.recipe.ip = self.jump
 
-class loop_stop(object):
+class loop_end(object):
     def __init__(self, instr, depth, recipe):
         self.recipe = recipe
         self.verb = instr.rest[2].lower()[:-2]
@@ -202,7 +202,7 @@ class loop_stop(object):
                         break
                 else:
                     self.search_depth -= 1
-            elif type(i) == loop_stop:
+            elif type(i) == loop_end:
                 self.search_depth += 1
         assert self.search_depth == 0
 
@@ -215,7 +215,7 @@ def make_set_aside(args, recipe):
     def set_aside():
         for i in range(recipe.ip, len(recipe.instructions)):
             instr = recipe.instructions[i]
-            if type(instr) is loop_stop:
+            if type(instr) is loop_end:
                 recipe.ip = i+1
                 return
         # if we reach here, we weren't

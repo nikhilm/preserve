@@ -105,7 +105,7 @@ Current state:
                 self.loop_depth += 1
                 ci = instructions.loop_start(instr, self.loop_depth, self)
             elif instr.rest[1] == 'until':
-                ci = instructions.loop_stop(instr, self.loop_depth, self)
+                ci = instructions.loop_end(instr, self.loop_depth, self)
                 self.loop_depth -= 1
             else:
                 raise AttributeError()
