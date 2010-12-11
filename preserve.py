@@ -91,25 +91,12 @@ Current state:
         self.ingredients[ing.name] = ing
 
     def cook_instruction(self, instr):
-        make = getattr(instructions, 'make_%s'%instr.command, None)
-        if make is None:
-            return None
+        make = getattr(instructions, 'make_%s'%instr.command)
         return make(instr.rest, self)
 
     def add_instruction(self, instr):
         try:
             ci = self.cook_instruction(instr)
-            if ci is not None:
-                pass
-            elif instr.rest[0] == 'the':
-                self.loop_depth += 1
-                ci = instructions.loop_start(instr, self.loop_depth, self)
-            elif instr.rest[1] == 'until':
-                ci = instructions.loop_end(instr, self.loop_depth, self)
-                self.loop_depth -= 1
-            else:
-                raise AttributeError()
-
             self.instructions.append(ci)
         except AttributeError, e:
             self.log.debug("Recipe attribute error %s"%e)

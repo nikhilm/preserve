@@ -162,12 +162,14 @@ def make_clean(args, recipe):
 
     return clean
 
-class loop_start(object):
-    def __init__(self, instr, depth, recipe):
+class make_loop_start(object):
+    def __init__(self, args, recipe):
+        args = args[0] #unpack
+        recipe.loop_depth += 1
         self.recipe = recipe
-        self.verb = instr.command.lower()
-        self.ingredient_name = instr.rest[1]
-        self.depth = depth
+        self.verb = args[0].lower()
+        self.ingredient_name = args[2]
+        self.depth = recipe.loop_depth
         self.jump = None
 
     def __call__(self):
@@ -177,21 +179,24 @@ class loop_start(object):
         if val == 0:
             self.recipe.ip = self.jump
 
-class loop_end(object):
-    def __init__(self, instr, depth, recipe):
+class make_loop_end(object):
+    def __init__(self, args, recipe):
+        args = args[0] #unpack
+        log.debug(args)
         self.recipe = recipe
-        self.verb = instr.rest[2].lower()[:-2]
-        self.depth = depth
+        self.verb = args[3].lower()[:-2]
+        self.depth = recipe.loop_depth
+        recipe.loop_depth -= 1
         self.jump = None
 
         self.ingredient_name = None
-        if instr.rest[0] is not None:
-            self.ingredient_name = instr.rest[0][1]
+        if args[1] is not None:
+            self.ingredient_name = args[1][1]
 
         self.search_depth = 0
         # search for start expression
         for i in reversed(recipe.instructions):
-            if type(i) == loop_start:
+            if type(i) == make_loop_start:
                 # depth > ours is ok
                 if i.depth == self.depth:
                     if i.verb != self.verb:
@@ -202,7 +207,7 @@ class loop_end(object):
                         break
                 else:
                     self.search_depth -= 1
-            elif type(i) == loop_end:
+            elif type(i) == make_loop_end:
                 self.search_depth += 1
         assert self.search_depth == 0
 
@@ -215,7 +220,7 @@ def make_set_aside(args, recipe):
     def set_aside():
         for i in range(recipe.ip, len(recipe.instructions)):
             instr = recipe.instructions[i]
-            if type(instr) is loop_end:
+            if type(instr) is make_loop_end:
                 recipe.ip = i+1
                 return
         # if we reach here, we weren't
