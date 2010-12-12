@@ -250,6 +250,7 @@ def make_serve_with(args, recipe):
 
 def make_refrigerate(args, recipe):
     def refrigerate(env):
+        make_serve(args[0][1], recipe)(env)
         recipe.ip = len(recipe.instructions)
 
     return refrigerate
