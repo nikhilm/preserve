@@ -19,7 +19,7 @@ pos = 0
 # order matters
 instruction_spec = [
     Spec(x.lower().split()[0], x) for x in [
-        'Take', 'Put', 'Fold', 'Add', 'Remove', 'Combine', 'Divide', 'Stir', 'Mix', 'Clean', 'Pour', 'Set aside', 'Refrigerate', 'from', 'into', 'the', 'to', 'for', 'contents of the', 'until', 'refrigerator', 'minutes', 'hours', 'well'
+        'Take', 'Put', 'Fold', 'Add', 'Remove', 'Combine', 'Divide', 'Stir', 'Mix', 'Clean', 'Pour', 'Set aside', 'Refrigerate', 'from', 'into', 'the', 'to', 'for', 'contents of the', 'until', 'refrigerator', 'minute', 'minutes', 'hour', 'hours', 'well'
     ]
 ]
 
@@ -101,7 +101,7 @@ def parse_instruction(spec):
 
     add_dry_i = sometok('add_dry') + p.maybe(to + p.maybe(ordinal|the) + bowl)
 
-    stir_1 = sometok('stir') + p.maybe(the + p.maybe(ordinal|the) + bowl) + sometok('for') + sometok('number') + sometok('minutes')
+    stir_1 = sometok('stir') + p.maybe(the + p.maybe(ordinal|the) + bowl) + sometok('for') + sometok('number') + (sometok('minute')|sometok('minutes'))
     stir_2 = sometok('stir') + (p.oneplus(string) >> concat) + into + the + p.maybe(ordinal) + bowl
     stir_i = stir_1 | stir_2
 
@@ -116,7 +116,7 @@ def parse_instruction(spec):
 
     serve_with_i = sometok('serve_with') + (p.oneplus(string) >> concat)
 
-    refrigerate_i = sometok('refrigerate') + p.maybe(sometok('for') + sometok('number') + sometok('hours'))
+    refrigerate_i = sometok('refrigerate') + p.maybe(sometok('for') + sometok('number') + (sometok('hour')|sometok('hours')))
 
     instruction = ( take_i
                   | put_i
