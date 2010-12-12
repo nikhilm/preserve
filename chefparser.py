@@ -68,7 +68,7 @@ def tokenize(input):
     return tokenize_minus_whitespace(tokens, input)
 
 def parse_instruction(spec):
-    string = sometok('string')
+    string = p.oneplus(sometok('string')) >> (lambda x: ' '.join(x))
     ordinal = sometok('ordinal')
     bowl = sometok('bowl')
     the = sometok('the')
@@ -142,7 +142,7 @@ def parse_instruction(spec):
 
 def parse(input):
     period = sometok('period')
-    string = sometok('string')
+    string = p.oneplus(sometok('string')) >> (lambda x: ' '.join(x))
     number = sometok('number')
 
     title = string + p.skip(period) >> RecipeTitle
