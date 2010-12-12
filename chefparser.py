@@ -11,7 +11,8 @@ from funcparserlib.contrib.common import sometok, unarg
 from common import *
 
 log = logging.getLogger('preserve.chefparser')
-log.addHandler(logging.StreamHandler())
+#log.addHandler(logging.StreamHandler())
+#log.setLevel(logging.DEBUG)
 
 pos = 0
 

@@ -12,7 +12,7 @@ log.addHandler(logging.StreamHandler())
 
 global_loglevel = logging.DEBUG
 
-log.setLevel(global_loglevel)
+#log.setLevel(global_loglevel)
 
 class Ingredient(object):
     def __init__(self, name, unit=None, initial=None):
@@ -50,8 +50,8 @@ class Recipe(object):
         self.instructions = []
         self.title = title
         self.log = logging.getLogger(self.title)
-        self.log.addHandler(logging.StreamHandler())
-        self.log.setLevel(global_loglevel)
+        self.log.addHandler(logging.NullHandler())
+        #self.log.setLevel(global_loglevel)
 
         # used only during instruction
         # generation phase
@@ -111,7 +111,6 @@ Current state:
 
 def interpret_recipe(title, ast, env):
     env.recipes[title.lower()] = recipe = Recipe(title)
-    log.debug("Interpreting recipe %s"%title)
 
     for node in ast:
         if type(node) is c.IngredientSection:
@@ -141,7 +140,6 @@ def interpret(ast, env):
     main = None
 
     for other in ast:
-        log.debug(other.parts)
         recipe = interpret_recipe(other.parts[0].title, other.parts[1:], env)
         if main is None:
             main = recipe

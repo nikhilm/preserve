@@ -8,7 +8,8 @@ import random
 import preserve
 
 log = logging.getLogger('preserve.instructions')
-log.addHandler(logging.StreamHandler())
+#log.addHandler(logging.StreamHandler())
+#log.setLevel(preserve.global_loglevel)
 
 def num(n):
     if n is None or n == 'the':
@@ -249,8 +250,6 @@ def make_serve_with(args, recipe):
 
 def make_refrigerate(args, recipe):
     def refrigerate(env):
-        log.debug("REFRIG %s", args)
-        log.debug("Setting ip to %d", len(recipe.instructions))
         recipe.ip = len(recipe.instructions)
 
     return refrigerate
