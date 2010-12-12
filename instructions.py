@@ -42,6 +42,8 @@ def make_liquefy(args, recipe):
 
     return liquefy
 
+make_liquify = make_liquefy
+
 def make_pour(args, recipe):
     def pour(env):
         n = num(args[1])
