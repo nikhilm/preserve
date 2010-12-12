@@ -19,10 +19,10 @@ pos = 0
 # order matters
 instruction_spec = [
     Spec(x.lower().split()[0], x) for x in [
-        'Take', 'Put', 'Fold', 'Add', 'Remove', 'Combine', 'Divide', 'Stir', 'Mix', 'Clean', 'Pour', 'Set aside', 'Refrigerate', 'from', 'into', 'the', 'to', 'for', 'contents of the', 'until', 'refrigerator', 'minute', 'minutes', 'hour', 'hours', 'well'
+        'Take', 'Put', 'Fold', 'Add', 'Remove', 'Combine', 'Divide', 'Stir', 'Mix', 'Clean', 'Pour', 'Set aside', 'Refrigerate', 'from', 'into', 'the', 'for', 'contents of the', 'until', 'refrigerator', 'minute', 'minutes', 'hour', 'hours', 'well'
     ]
 ]
-
+instruction_spec.insert(0, Spec('to', r'\wto\w'))
 instruction_spec.insert(0, Spec('add_dry', 'Add dry ingredients'))
 instruction_spec.insert(0, Spec('liquefy', 'Liquefy|Liquify'))
 instruction_spec.append(Spec('serve_with', r'Serve with'))
