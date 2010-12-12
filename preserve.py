@@ -79,7 +79,7 @@ Current state:
         for (k, v) in self.baking_dishes.items():
             rep.append('  Dish %d'%k)
             for i in v:
-                rep.append('    %s'%v)
+                rep.append('    %s'%i)
 
         return '\n'.join(rep)
 
