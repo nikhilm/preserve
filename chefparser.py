@@ -40,7 +40,6 @@ tokens = [
     Spec('liquid_measure', r' ml | l | dash[es]? '),
     Spec('mix_measure', r'cup[s]?|teaspoon[s]?|tablespoon[s]?'),
     Spec('measure_type', 'heaped|level'),
-    Spec('time_unit', '(hour|minute)[s]?'),
     # TODO hours minutes
     Spec('cooking_time', r'Cooking time:'),
     # TODO gas mark
@@ -164,8 +163,7 @@ def parse(input):
 
     cooking_time = (p.skip(sometok('cooking_time'))
                     + (number
-                      + p.maybe(sometok('time_unit')
-                      ) >> unarg(CookingTime))
+                      >> unarg(CookingTime))
 
                     + p.skip(sometok('period'))
                    )
