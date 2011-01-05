@@ -19,10 +19,11 @@ pos = 0
 # order matters
 instruction_spec = [
     Spec(x.lower().split()[0], x) for x in [
-        'Take', 'Put', 'Fold', 'Add', 'Remove', 'Combine', 'Divide', 'Stir', 'Mix', 'Clean', 'Pour', 'Set aside', 'Refrigerate', 'from', 'into', 'the', 'for', 'contents of the', 'until', 'refrigerator', 'minute', 'minutes', 'hour', 'hours', 'well'
+        'Take', 'Put', 'Fold', 'Add', 'Remove', 'Combine', 'Divide', 'Stir', 'Mix', 'Clean', 'Pour', 'Set aside', 'Refrigerate', 'from', 'the', 'for', 'contents of the', 'until', 'refrigerator', 'minute', 'minutes', 'hour', 'hours', 'well'
     ]
 ]
-instruction_spec.insert(0, Spec('to', r'\wto\w'))
+instruction_spec.insert(0, Spec('to', r'to'))
+instruction_spec.insert(0, Spec('into', r'into'))
 instruction_spec.insert(0, Spec('add_dry', 'Add dry ingredients'))
 instruction_spec.insert(0, Spec('liquefy', 'Liquefy|Liquify'))
 instruction_spec.append(Spec('serve_with', r'Serve with'))
@@ -80,7 +81,7 @@ def parse_instruction(spec):
 
     take_i = sometok('take') + (p.oneplus(string) >> concat) + sometok('from') + sometok('refrigerator')
 
-    put_i = sometok('put') + p.skip(p.maybe(the)) + (p.oneplus(string) >> concat)  + sometok('into') + p.maybe(ordinal|the) + bowl
+    put_i = sometok('put') + p.skip(p.maybe(the)) + (p.oneplus(string) >> concat)  + p.skip(into) + p.maybe(ordinal|the) + bowl
 
     liquefy_1 = sometok('liquefy') + sometok('contents') + p.maybe(ordinal) + bowl
     liquefy_2 = sometok('liquefy') + (p.oneplus(string) >> concat)
